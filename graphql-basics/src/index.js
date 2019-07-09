@@ -3,12 +3,45 @@ import { GraphQLServer} from 'graphql-yoga';
 
 //Scalar types - String, Boolean, Int, Float, ID
 
+//Demo User data
+const users = [{
+    id: '1',
+    name: 'Scott',
+    email: 'scottcal@gmail.com',
+    age: 41
+},{
+    id: '2',
+    name: 'Sarah',
+    email: 'sara@example.com'
+},{
+    id: '3',
+    name: 'Mike',
+    email: 'Mike@example.com'
+
+}]
+//Demo Post Data
+    const posts = [{
+        id: '1',
+        title: 'What is graphql?',
+        body: 'Graphql is a new way to query data, that doesn\'t reply on REST',
+        pushlished: true
+    },{
+        id: '2',
+        title: 'Why graphql?',
+        body: 'Graphql makes like easier by allow you to ask for only the data you need',
+        pushlished: true
+    },{
+        id: '3',
+        title: 'Who uses graphql?',
+        body: 'Companies like Facebook, Airbnb and tons on mobile apps reply on graphql',
+        pushlished: false
+    }]
+
 //Type definitions (schema)
 const typeDefs = `
     type Query{
-        greeting(name: String!, position: String!): String!
-        add(numbers: [Float!]!): Float!
-        grades: [Int!]!
+        users(query: String): [User!]!
+        posts(query: String): [Post!]!
         me: User!
         post: Post!
     }
@@ -25,29 +58,30 @@ const typeDefs = `
         published: Boolean!
     }
 `
-
 //Resolvers
 const resolvers = {
     Query: {
-        greeting(parent,args,ctx, info) {
-            if (args.name && args.position){
-                return `Hello, ${args.name}! You are my favorite ${args.position}`
-            } else {
-                return `Hello!`
-            }
-        },
-        add(parent,args,ctx, info) {
-            if(args.numbers.length === 0) {
-                return 0
-            } 
+        users(parent,args,ctx,info) {
             
-            return args.numbers.reduce((accumulator,currentValue)=> {
-                return accumulator + currentValue
+            if (!args.query){
+                return users
+            }
+
+            return users.filter((users) => {
+                return users.name.toLowerCase().includes(args.query.toLowerCase())
             })
-            // [1,5,10,2]
         },
-        grades(parent,args,ctx,info) {
-            return [99,80,93]
+        posts(parent,args,ctx,info){
+            if (args.query){
+                return posts.filter((posts) => {
+                    return (
+                        posts.title.toLowerCase().includes(args.query.toLowerCase()) || 
+                        posts.body.toLowerCase().includes(args.query.toLowerCase())
+                    )
+                })
+            }
+            return posts
+
         },
         me(){
             return{
