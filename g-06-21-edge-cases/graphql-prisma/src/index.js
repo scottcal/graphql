@@ -1,4 +1,3 @@
-//graphql-yoga github.com/prismagraphql-yoga
 import { GraphQLServer, PubSub } from 'graphql-yoga'
 import db from './db'
 import { resolvers, fragmentReplacements } from './resolvers/index'
@@ -21,9 +20,5 @@ const server = new GraphQLServer({
 })
 
 server.start(() => {
-    var today = new Date();
-    var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    var dateTime = date+' '+time;
-    console.log('The Server is up!',`${dateTime}`);
+    console.log('The server is up!')
 })

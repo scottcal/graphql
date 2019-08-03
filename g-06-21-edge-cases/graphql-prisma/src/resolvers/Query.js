@@ -3,7 +3,7 @@ import getUserId from '../utils/getUserId'
 const Query = {
     users(parent, args, { prisma }, info) {
         const opArgs = {}
-
+        
         if (args.query) {
             opArgs.where = {
                 OR: [{
@@ -56,7 +56,7 @@ const Query = {
     },
     me(parent, args, { prisma, request }, info) {
         const userId = getUserId(request)
-
+        
         return prisma.query.user({
             where: {
                 id: userId
@@ -65,7 +65,7 @@ const Query = {
     },
     async post(parent, args, { prisma, request }, info) {
         const userId = getUserId(request, false)
-    
+
         const posts = await prisma.query.posts({
             where: {
                 id: args.id,
